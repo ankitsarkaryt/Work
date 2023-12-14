@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 struct Process {
@@ -55,11 +56,28 @@ int main() {
 
     roundRobinScheduling(processes, n, timeQuantum);
 
-    cout << "Process ID\tArrival Time\tBurst Time\tCompletion Time\n";
+    // Calculate turnaround time and waiting time
+    double totalTurnaroundTime = 0, totalWaitingTime = 0;
+
+    cout << "\nProcess ID\tArrival Time\tBurst Time\tCompletion Time\tTurnaround Time\tWaiting Time\n";
     for (int i = 0; i < n; i++) {
+        processes[i].completionTime = max(processes[i].completionTime, processes[i].arrivalTime);
+        int turnaroundTime = processes[i].completionTime - processes[i].arrivalTime;
+        int waitingTime = turnaroundTime - processes[i].burstTime;
+
+        totalTurnaroundTime += turnaroundTime;
+        totalWaitingTime += waitingTime;
+
         cout << processes[i].id << "\t\t" << processes[i].arrivalTime << "\t\t"
-             << processes[i].burstTime << "\t\t" << processes[i].completionTime << endl;
+             << processes[i].burstTime << "\t\t" << processes[i].completionTime << "\t\t"
+             << turnaroundTime << "\t\t" << waitingTime << endl;
     }
+
+    double avgTurnaroundTime = totalTurnaroundTime / n;
+    double avgWaitingTime = totalWaitingTime / n;
+
+    cout << "\nAverage Turnaround Time: " << avgTurnaroundTime << endl;
+    cout << "Average Waiting Time: " << avgWaitingTime << endl;
 
     return 0;
 }
